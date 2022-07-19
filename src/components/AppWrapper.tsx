@@ -11,7 +11,7 @@ const AppWrapper: React.FC = function () {
   return (
     <StyledWrapper>
       <GlobalStyle />
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Main />
     </StyledWrapper>
   )

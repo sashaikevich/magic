@@ -16,6 +16,9 @@ const GlobalStyle = createGlobalStyle`
 body {
   color: ${({ theme }) => theme.colors.dark.main};
   background-color: ${({ theme }) => theme.colors.dark.bg};
+  width: 100%;
+  overflow-x: hidden;
+  font-family: sans-serif;
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}){
     background-color: red;
   }
