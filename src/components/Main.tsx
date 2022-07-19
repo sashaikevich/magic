@@ -41,33 +41,28 @@ const Main = function () {
           let day = dayjs(
             new Date(today.year(), today.month(), today.date() - range / 2 + i)
           )
+          // render to UI if date is a monday
           isMonday = day.day() === 1 ? true : false
+          // render to UI if first of month
           isFirstOfMonth = day.date() === 1 ? true : false
 
           return (
-            <div
+            <Day
               className='day'
               key={i}
+              calendarDay={8}
               onMouseEnter={() => {
                 console.log(i)
                 // return the date when dragging into here
               }}
-            >
-              _{isFirstOfMonth && day.format("MMMM")}
-              {isMonday && (
-                <>
-                  {" "}
-                  <br />
-                  {day.format("D")}
-                </>
-              )}
-            </div>
+              isFirstOfMonth={isFirstOfMonth}
+              isMonday={isMonday}
+              day={day}
+            />
           )
         })}
       </div>
-      <div className="projects-wrapper">
-        project
-      </div>
+      <div className='projects-wrapper'>project</div>
     </Roadmap>
   )
 }
@@ -83,15 +78,10 @@ const Roadmap = styled.div`
     display: flex;
     overflow-x: auto;
     flex-wrap: nowrap;
-    .day {
-      width: 5px;
-      flex-shrink: 0;
-      user-select: none;
-    }
   }
   .projects-wrapper {
     position: absolute;
-    left:0;
+    left: 0;
     right: 0;
     top: 80px;
     border: 2px solid red;
