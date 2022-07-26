@@ -7,17 +7,17 @@ import GlobalStyle from "../globalStyles"
 import Sidebar from "./Sidebar"
 import Main from "./Main"
 
-const AppWrapper: React.FC = function () {
+const LinearAppInterface = function () {
   return (
-    <StyledWrapper>
+    <StyledInterface>
       <GlobalStyle />
-      {/* <Sidebar /> */}
+      <Sidebar />
       <Main />
-    </StyledWrapper>
+    </StyledInterface>
   )
 }
 
-const StyledWrapper = styled.div`
+const StyledInterface = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -29,4 +29,4 @@ const StyledWrapper = styled.div`
   padding-right: env(safe-area-inset-right, 0px);
   padding-left: env(safe-area-inset-left, 0px);
 `
-export default AppWrapper
+export default LinearAppInterface

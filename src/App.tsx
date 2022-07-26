@@ -1,6 +1,6 @@
 import React from "react"
 
-import AppWrapper from "./components/AppWrapper"
+import LinearAppInterface from "./components/LinearAppInterface"
 import { ThemeProvider } from "styled-components"
 import {themes} from './globalStyles.js'
 
@@ -8,7 +8,7 @@ import {themes} from './globalStyles.js'
 function App() {
   return (
     <ThemeProvider theme={themes}>
-      <AppWrapper />
+      <LinearAppInterface />
     </ThemeProvider>
   )
 }

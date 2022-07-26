@@ -5,7 +5,7 @@ import { menuData as menu } from "../data/menu"
 
 import MenuItem from "./MenuItem"
 
-const Sidebar: React.FC = function () {
+const Sidebar = function () {
   return (
     <StyledSidebar>
       {menu.map((item, index):ReactElement => {
