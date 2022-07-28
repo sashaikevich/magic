@@ -80,6 +80,7 @@ function Roadmap() {
         </div>
         <div className='projects-wrapper'>
           {projects.map((project, i) => {
+            // TODO add refs to each project for later mapping the relations
             return (
               <RoadmapProject
                 project={project}

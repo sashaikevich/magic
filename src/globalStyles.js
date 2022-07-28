@@ -10,6 +10,7 @@ export const themes = {
 const GlobalStyle = createGlobalStyle`
 :root {
   --color-blue: rgb(94, 106, 210);
+  --ui-lines: rgb(48, 50, 54);
 }
 
 .roadmap {
@@ -28,6 +29,10 @@ body {
   width: 100%;
   overflow-x: hidden;
   font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    text-size-adjust: 100%;
+    
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}){
     background-color: red;
   }

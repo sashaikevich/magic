@@ -8,9 +8,13 @@ import MenuItem from "./MenuItem"
 const Sidebar = function () {
   return (
     <StyledSidebar>
+      <div>icon name photo</div>
+      <div>new issue button search</div>
       {menu.map((item, index):ReactElement => {
         return <MenuItem key={index} item={item} />
       })}
+      your teams
+      teams
     </StyledSidebar>
   )
 }
