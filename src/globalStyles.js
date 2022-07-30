@@ -65,6 +65,8 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     font-family: var(--font-regular);
     -webkit-font-smoothing: antialiased;
+                    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+                    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizelegibility;
     text-size-adjust: 100%;
     min-height: 100vh;

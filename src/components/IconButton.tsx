@@ -7,7 +7,8 @@ interface Props {
   icon: any // TODO: figure out the correct type (Not React.FunctionComponent<React.SVGAttributes<SVGElement>> )
   text?: String
   dropdown?: Boolean
-  children: string
+  children: String
+  className?: String
 }
 
 const IconButton = function ({ icon, children, dropdown = false }: Props) {
@@ -45,8 +46,8 @@ const StyledIconButton = styled.button`
   }
 
   svg {
-    margin-right: 10px;
+    margin-right: 6px;
     fill: rgb(138, 143, 152);
-    max-width: 12.5px;
+    max-width: 12px;
   }
 `

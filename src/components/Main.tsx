@@ -2,6 +2,8 @@ import React from "react"
 import styled from "styled-components"
 import Roadmap from "./Roadmap"
 
+import { center } from "../globalStyles"
+
 import IconButton from "./IconButton"
 import { ReactComponent as UpdatesIcon } from "../assets/icons/updates.svg"
 import { ReactComponent as GearIcon } from "../assets/icons/gear.svg"
@@ -16,20 +18,33 @@ const Main = function () {
           Roadmap <span className='project-status'>Active</span>
         </div>
         <div className='header-controls'>
-          <IconButton icon={<UpdatesIcon />}>Updates</IconButton>
-          <IconButton icon={<GearIcon />}>Edit milestone</IconButton>
-          <IconButton icon={<PlusIcon />}>Add project</IconButton>
+          <IconButton className='updates' icon={<UpdatesIcon />}>
+            Updates
+          </IconButton>
+          <IconButton className='milestones' icon={<GearIcon />}>
+            Edit milestone
+          </IconButton>
+          <IconButton className='add-project' icon={<PlusIcon />}>
+            Add project
+          </IconButton>
         </div>
       </StyledHeader>
       <StyledSubheader>
-        <div>
-          <button>All</button>
-          <button>Backlog</button>
-          <button>Active</button>
-          <button>Closed</button>
-          <button>Filter</button>
+        <div className='filter-wrapper'>
+          <div className='filter-tabs'>
+            <button className='tab'>All</button>
+            <button className='tab'>Backlog</button>
+            <button className='tab active'>Active</button>
+            <button className='tab'>Closed</button>
+          </div>
+          <button className='filter-deeper'>
+            <PlusIcon />
+            Filter
+          </button>
         </div>
-        <div><IconButton icon={<SearchPlusIcon/>}>Year</IconButton> etc</div>
+        <div>
+          <IconButton icon={<SearchPlusIcon />}>Year</IconButton> etc
+        </div>
       </StyledSubheader>
       <Roadmap />
     </StyledMain>
@@ -79,6 +94,56 @@ const StyledSubheader = styled.div`
   flex-shrink: 0;
   padding: 10px var(--padding-right) 10px var(--padding-left);
   border-bottom: 1px solid var(--ui-lines);
+  .filter-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    .filter-tabs {
+      background-color: rgb(39, 40, 43);
+      border-radius: 7px;
+      .tab {
+        color: var(--color-tertiary);
+        border-radius: 4px;
+        height: 24px;
+        padding: 4px 12px;
+        border-radius: 7px;
+        & + .tab {
+          position: relative;
+          &::after {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 0.8rem;
+            background-color: rgb(60, 63, 68);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+        &:hover {
+          background-color: var(--ui-lines);
+        }
+        &.active {
+          border: 1px solid rgb(60, 63, 68);
+          background-color: var(--ui-lines);
+          transition-duration: var(--speed-highlightFadeIn);
+          color: var(--color-primary);
+          box-shadow: rgb(0 0 0 / 10%) 0px 2px 4px;
+        }
+      }
+    }
+    .filter-deeper {
+      ${center}
+      border: 1px dashed var(--ui-lines);
+      height: 24px;
+      margin-left: 12px;
+      svg {
+        width: 10px;
+        margin-right: 5px;
+        fill: var(--color-tertiary);
+      }
+    }
+  }
 `
 
 export default Main
