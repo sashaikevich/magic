@@ -11,7 +11,7 @@ export type Project = {
 }
 export const projects: Project[] = [
   {
-    title: "Gather underwear",
+    title: "Collect underpants",
     startDate: "2022-06-1",
     endDate: "2022-07-17",
     lead: "Gnome",
@@ -19,7 +19,7 @@ export const projects: Project[] = [
     uuid: 1,
   },
   {
-    title: "????",
+    title: "???",
     startDate: "2022-06-10",
     endDate: "2022-07-26",
     lead: "Gnome",
@@ -27,7 +27,7 @@ export const projects: Project[] = [
     uuid: 2,
   },
   {
-    title: "profit",
+    title: "Profit",
     lead: "Gnome",
     startDate: "2022-07-2",
     endDate: "2022-08-17",

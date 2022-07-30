@@ -26,6 +26,6 @@ export const menuData = [
     title: "Roadmap",
     icon: <Roadmap />,
     path: "/",
-    active: false,
+    active: true,
   },
 ]

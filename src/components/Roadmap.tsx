@@ -29,7 +29,7 @@ function Roadmap() {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const daysWrapperRef = useRef<HTMLDivElement>(null)
 
-  const centerRoadmapOnToday = function(){
+  const centerRoadmapOnToday = function () {
     let initialOffset =
       (daysWrapperRef.current!.getBoundingClientRect().width -
         roadmapRef.current!.getBoundingClientRect().width) /
@@ -97,14 +97,20 @@ function Roadmap() {
 
 const StyledRoadmap = styled.div`
   width: 100%;
-  height: max-content;
-  height: 100vh;
+  /* height: max-content; */
   overflow-x: hidden;
+  overflow-y: hidden;
+  height: calc(100vh - 57px - 48px); // less the heights of header and subheader
+  /* display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%; */
 
   .scroll-area {
     overflow-x: auto;
     height: 100%;
     position: relative;
+    background: rgba(0, 0, 0, 0.004);
     .days-wrapper {
       display: flex;
       height: 100%;

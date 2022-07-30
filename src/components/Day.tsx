@@ -32,7 +32,7 @@ const Day = function ({ isFirstOfMonth, isMonday, isToday, day }: Props) {
   )
 }
 
-const StyledDayColumn = styled.div<{ isFirstOfMonth: boolean }>`
+const StyledDayColumn = styled.div<{ isFirstOfMonth: Boolean }>`
   width: var(--day-width);
   height: 100%;
   flex-shrink: 0;
