@@ -182,6 +182,7 @@ const StyledSidebar = styled.nav`
   }
   .support-wrapper {
     button {
+      ${center};
       background: none;
       color: var(--color-tertiary);
       svg {

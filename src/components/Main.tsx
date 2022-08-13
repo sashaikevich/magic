@@ -9,6 +9,9 @@ import { ReactComponent as UpdatesIcon } from "../assets/icons/updates.svg"
 import { ReactComponent as GearIcon } from "../assets/icons/gear.svg"
 import { ReactComponent as PlusIcon } from "../assets/icons/plus.svg"
 import { ReactComponent as SearchPlusIcon } from "../assets/icons/search-plus.svg"
+import { ReactComponent as ViewSettingsIcon } from "../assets/icons/view-settings.svg"
+import { ReactComponent as ViewTimelineIcon } from "../assets/icons/view-timeline.svg"
+import { ReactComponent as ViewListIcon } from "../assets/icons/view-list.svg"
 
 const Main = function () {
   return (
@@ -42,8 +45,19 @@ const Main = function () {
             Filter
           </button>
         </div>
-        <div>
-          <IconButton icon={<SearchPlusIcon />}>Year</IconButton> etc
+        <div className='views-wrapper'>
+          <IconButton icon={<SearchPlusIcon />}>Year</IconButton>
+          <div className='views-tabs'>
+            <button className='tab'>
+              <ViewTimelineIcon />
+            </button>
+            <button className='tab active'>
+              <ViewListIcon />
+            </button>
+          </div>
+          <IconButton icon={<ViewSettingsIcon />} dropdown>
+            View
+          </IconButton>
         </div>
       </StyledSubheader>
       <Roadmap />
@@ -141,6 +155,40 @@ const StyledSubheader = styled.div`
         width: 10px;
         margin-right: 5px;
         fill: var(--color-tertiary);
+      }
+    }
+  }
+  .views-wrapper {
+    ${center}
+
+    .views-tabs {
+      margin-left: 8px;
+      display: flex;
+      background-color: rgb(48, 50, 54);
+      border: 1px solid rgb(60, 63, 68);
+      border-radius: 4px;
+      height: 24px;
+      .tab {
+        max-height: 24px;
+        width: 24px;
+        padding: 0;
+        ${center};
+        &:hover {
+          svg {
+            fill: var(--color-secondary);
+          }
+        }
+        &.active {
+          background-color: rgb(55, 56, 59);
+          border-color: rgb(69, 72, 78);
+          svg {
+            fill: var(--color-secondary);
+          }
+        }
+        svg {
+          fill: rgb(138, 143, 152);
+          max-width: 12px;
+        }
       }
     }
   }
