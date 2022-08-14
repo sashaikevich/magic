@@ -25,6 +25,7 @@ function Roadmap() {
   let isMonday = false
   let isToday = false
   let isFirstOfMonth = false
+  let isNewYear = false
   const roadmapRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const daysWrapperRef = useRef<HTMLDivElement>(null)
@@ -43,9 +44,6 @@ function Roadmap() {
 
   return (
     <StyledRoadmap className='roadmap' ref={roadmapRef}>
-      {/* generate header  */}
-      {/* generate projects */}
-      {/* generate last placeholder row */}
       <div ref={scrollAreaRef} className='scroll-area'>
         <div ref={daysWrapperRef} className='days-wrapper'>
           {arr.map((d, i) => {
@@ -60,6 +58,8 @@ function Roadmap() {
             isMonday = day.day() === 1 ? true : false
             // render to UI if first of month
             isFirstOfMonth = day.date() === 1 ? true : false
+            // render to UI if new year
+            isNewYear = day.month() === 0 ? true : false
             // highlight today on calendar
             isToday =
               day.format("YYYY-MM-DD") === today.format("YYYY-MM-DD")
@@ -73,6 +73,7 @@ function Roadmap() {
                 isFirstOfMonth={isFirstOfMonth}
                 isMonday={isMonday}
                 isToday={isToday}
+                isNewYear={isNewYear}
                 day={day}
               />
             )
@@ -97,14 +98,8 @@ function Roadmap() {
 
 const StyledRoadmap = styled.div`
   width: 100%;
-  /* height: max-content; */
-  overflow-x: hidden;
-  overflow-y: hidden;
-  height: calc(100vh - 57px - 48px); // less the heights of header and subheader
-  /* display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100%; */
+  overflow: hidden;
+  height: calc(100vh - 57px - 46px ); // less the heights of header and subheader
 
   .scroll-area {
     overflow-x: auto;
@@ -113,11 +108,22 @@ const StyledRoadmap = styled.div`
     background: rgba(0, 0, 0, 0.004);
     .days-wrapper {
       display: flex;
+      position: relative;
       height: 100%;
       overflow-x: auto;
       flex-wrap: nowrap;
       width: fit-content;
       overflow-x: visible;
+      font-size: var(--font-size-smallPlus);
+      &::before {
+        content: "";
+        background: var(--ui-lines);
+        left: 0;
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        top: 55px;
+      }
     }
     .projects-wrapper {
       position: absolute;

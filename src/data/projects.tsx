@@ -1,4 +1,6 @@
 import * as dayjs from "dayjs"
+import { ReactComponent as PirateIcon } from "../assets/icons/pirate.svg"
+
 // TODO add real uuid
 
 export type Project = {
@@ -8,6 +10,7 @@ export type Project = {
   startDate: dayjs.Dayjs | string
   endDate: dayjs.Dayjs | string
   order: number
+  icon?: any // TODO figure out correct type for icon
 }
 export const projects: Project[] = [
   {
@@ -17,6 +20,7 @@ export const projects: Project[] = [
     lead: "Gnome",
     order: 1,
     uuid: 1,
+    icon: <PirateIcon />
   },
   {
     title: "???",
@@ -25,6 +29,7 @@ export const projects: Project[] = [
     lead: "Gnome",
     order: 2,
     uuid: 2,
+    icon: <PirateIcon />
   },
   {
     title: "Profit",
@@ -33,5 +38,6 @@ export const projects: Project[] = [
     endDate: "2022-08-17",
     order: 3,
     uuid: 3,
+    icon: <PirateIcon />
   },
 ]
