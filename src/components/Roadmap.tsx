@@ -10,13 +10,13 @@ let range = 366
 const today = dayjs(new Date())
 let month = today.format("MMMM")
 let todayDate = today.date()
-let noPastDays = range / 2
+let numPastDays = range / 2
 let earliestDate = dayjs(
-  new Date(today.year(), today.month(), todayDate - noPastDays)
+  new Date(today.year(), today.month(), todayDate - numPastDays)
 )
-let noFutureDays = range / 2
+let numFutureDays = range / 2
 let furthestDate = dayjs(
-  new Date(today.year(), today.month(), todayDate + noFutureDays)
+  new Date(today.year(), today.month(), todayDate + numFutureDays)
 )
 
 function Roadmap() {
