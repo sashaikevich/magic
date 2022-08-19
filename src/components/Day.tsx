@@ -1,7 +1,9 @@
 import dayjs from "dayjs"
 import React from "react"
 import styled from "styled-components"
+import { useProjectsDispatch } from "../contexts/ProjectContext"
 
+import { DraggingProjectState } from "./Roadmap"
 interface Props {
   className: string
   isFirstOfMonth: boolean
@@ -9,6 +11,7 @@ interface Props {
   isMonday: boolean
   isToday: boolean
   day: dayjs.Dayjs
+  draggingProject: DraggingProjectState
 }
 
 const Day = function ({
@@ -17,10 +20,38 @@ const Day = function ({
   isMonday,
   isToday,
   day,
+  draggingProject,
 }: Props) {
   let dayFormatted = day.format("YYYY-MM-DD") // TODO for drag over info
+  let dispatch = useProjectsDispatch()
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    let target = e.target as HTMLDivElement
+    let hoverDate = target.getAttribute("data-day-info")
+    if (hoverDate && draggingProject.handle === "start") {
+      dispatch({
+        type: "CHANGE_PROJECT_START_DATE",
+        payload: {
+          projID: draggingProject.projId,
+          targetDate: hoverDate,
+        },
+      })
+    } else if (hoverDate && draggingProject.handle === "end") {
+      dispatch({
+        type: "CHANGE_PROJECT_END_DATE",
+        payload: {
+          projID: draggingProject.projId,
+          targetDate: hoverDate,
+        },
+      })
+    }
+  }
   return (
-    <StyledDayColumn isFirstOfMonth={isFirstOfMonth}>
+    <StyledDayColumn
+      isFirstOfMonth={isFirstOfMonth}
+      data-day-info={dayFormatted}
+      onDragEnter={handleDragEnter}
+    >
       {(isNewYear || isFirstOfMonth) && (
         <span className='month-year-wrapper'>
           {isNewYear && isFirstOfMonth && (
@@ -50,8 +81,7 @@ const StyledDayColumn = styled.div<{ isFirstOfMonth: Boolean }>`
   flex-shrink: 0;
   user-select: none;
   border-left: ${({ isFirstOfMonth }) =>
-    isFirstOfMonth && "1px dashed var(--ui-lines)"}; 
-  pointer-events: none; // Will this interfere with drag over? TODO
+    isFirstOfMonth && "1px dashed var(--ui-lines)"};
   .month-year-wrapper {
     position: absolute;
     top: 0.65em;

@@ -1,8 +1,9 @@
-import React, { useLayoutEffect, useRef } from "react"
+import React, { useLayoutEffect, useRef, useState } from "react"
+import { useProjectsState } from "../contexts/ProjectContext"
+
 import styled from "styled-components"
 
 import dayjs from "dayjs"
-import { projects } from "../data/projects"
 import Day from "./Day"
 import RoadmapProject from "./RoadmapProject"
 
@@ -19,7 +20,18 @@ let furthestDate = dayjs(
   new Date(today.year(), today.month(), todayDate + numFutureDays)
 )
 
+export type DraggingProjectState = {
+  projId: number
+  handle: "start" | "end"
+}
+
 function Roadmap() {
+  let projects = useProjectsState()
+
+  let [draggingProject, setDraggingProject] = useState<DraggingProjectState>(
+    {} as DraggingProjectState
+  )
+
   let arr = new Array(range).fill(null)
   let prevHeaderMonth = ""
   let isMonday = false
@@ -75,6 +87,7 @@ function Roadmap() {
                 isToday={isToday}
                 isNewYear={isNewYear}
                 day={day}
+                draggingProject={draggingProject}
               />
             )
           })}
@@ -85,8 +98,9 @@ function Roadmap() {
             return (
               <RoadmapProject
                 project={project}
-                key={project.uuid}
+                key={project._id}
                 earliestDate={earliestDate}
+                setDraggingProject={setDraggingProject}
               />
             )
           })}
@@ -99,7 +113,7 @@ function Roadmap() {
 const StyledRoadmap = styled.div`
   width: 100%;
   overflow: hidden;
-  height: calc(100vh - 57px - 46px ); // less the heights of header and subheader
+  height: calc(100vh - 57px - 46px); // less the heights of header and subheader
 
   .scroll-area {
     overflow-x: auto;

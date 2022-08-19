@@ -2,6 +2,8 @@ import React from "react"
 import styled from "styled-components"
 
 import GlobalStyle from "../globalStyles"
+import { ProjectsProvider } from "../contexts/ProjectContext"
+
 
 // components
 import Sidebar from "./Sidebar"
@@ -11,8 +13,10 @@ const LinearAppInterface = function () {
   return (
     <StyledInterface>
       <GlobalStyle />
-      <Sidebar />
-      <Main />
+      <ProjectsProvider>
+        <Sidebar />
+        <Main />
+      </ProjectsProvider>
     </StyledInterface>
   )
 }

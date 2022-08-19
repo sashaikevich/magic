@@ -15,53 +15,56 @@ import { ReactComponent as ViewListIcon } from "../assets/icons/view-list.svg"
 
 const Main = function () {
   return (
-    <StyledMain>
-      <StyledHeader>
-        <div className='breadcrumbs'>
-          Roadmap <span className='project-status'>Active</span>
-        </div>
-        <div className='header-controls'>
-          <IconButton className='updates' icon={<UpdatesIcon />}>
-            Updates
-          </IconButton>
-          <IconButton className='milestones' icon={<GearIcon />}>
-            Edit milestone
-          </IconButton>
-          <IconButton className='add-project' icon={<PlusIcon />}>
-            Add project
-          </IconButton>
-        </div>
-      </StyledHeader>
-      <StyledSubheader>
-        <div className='filter-wrapper'>
-          <div className='filter-tabs'>
-            <button className='tab'>All</button>
-            <button className='tab'>Backlog</button>
-            <button className='tab active'>Active</button>
-            <button className='tab'>Closed</button>
+      <StyledMain>
+        <StyledHeader>
+          <div className='breadcrumbs'>
+            Roadmap <span className='project-status'>Active</span>
           </div>
-          <button className='filter-deeper'>
-            <PlusIcon />
-            Filter
-          </button>
-        </div>
-        <div className='views-wrapper'>
-          <IconButton icon={<SearchPlusIcon />}>Year</IconButton>
-          <div className='views-tabs'>
-            <button className='tab'>
-              <ViewTimelineIcon />
-            </button>
-            <button className='tab active'>
-              <ViewListIcon />
+          <div className='header-controls'>
+            <IconButton className='updates' icon={<UpdatesIcon />}>
+              Updates
+            </IconButton>
+            <IconButton className='milestones' icon={<GearIcon />}>
+              Edit milestone
+            </IconButton>
+            <IconButton className='add-project' icon={<PlusIcon />}>
+              Add project
+            </IconButton>
+          </div>
+        </StyledHeader>
+        <StyledSubheader>
+          <div className='filter-wrapper'>
+            <div className='filter-tabs'>
+              <button className='tab'>All</button>
+              <button className='tab'>Backlog</button>
+              <button className='tab active'>Active</button>
+              <button className='tab'>Closed</button>
+            </div>
+            <button className='filter-deeper'>
+              <PlusIcon />
+              Filter
             </button>
           </div>
-          <IconButton icon={<ViewSettingsIcon />} dropdown>
-            View
-          </IconButton>
-        </div>
-      </StyledSubheader>
-      <Roadmap />
-    </StyledMain>
+          <div className='views-wrapper'>
+            <IconButton icon={<SearchPlusIcon />}>Year</IconButton> {/* TODO: add dropdown arrows*/}
+            <div className='views-tabs'>
+              <button className='tab'>
+                <ViewTimelineIcon />
+              </button>
+              <button className='tab active'>
+                <ViewListIcon />
+              </button>
+              <button className='tab'>
+                <ViewListIcon />
+              </button>
+            </div>
+            <IconButton icon={<ViewSettingsIcon />} dropdown>
+              View
+            </IconButton>
+          </div>
+        </StyledSubheader>
+        <Roadmap />
+      </StyledMain>
   )
 }
 
@@ -70,6 +73,7 @@ const StyledMain = styled.div`
   overflow-y: hidden;
   --padding-left: 30px;
   --padding-right: 24px;
+  user-select: none;
 `
 const StyledHeader = styled.header`
   min-height: 57px;

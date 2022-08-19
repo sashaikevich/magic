@@ -1,47 +1,96 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import dayjs from "dayjs"
 
-import { Project } from "../data/projects" // TODO maybe move to a d.ts
+import { Project } from "../data/projects" // TODO maybe move to interfaces d.ts?
+import { DraggingProjectState } from "./Roadmap"
 
 import { center } from "../globalStyles"
 interface Props {
-  // className: string
-  // onMouseEnter: EventListener
   earliestDate: dayjs.Dayjs
   project: Project
+  setDraggingProject: React.Dispatch<React.SetStateAction<DraggingProjectState>>
 }
 
-const RoadmapProject = function (props: Props) {
-  let date1 = dayjs(props.project.startDate)
-  let date2 = dayjs(props.project.endDate)
-  let projLength = date2.diff(date1, "days")
-  let daysFromRangeStart = date1.diff(props.earliestDate, "days")
+const RoadmapProject = function ({
+  project,
+  earliestDate,
+  setDraggingProject,
+}: Props) {
+  let startDate = dayjs(project.startDate)
+  let endDate = dayjs(project.endDate)
+  let projLength = endDate.diff(startDate, "days")
+  let daysFromRangeStart = startDate.diff(earliestDate, "days")
+  let [isDragging, setIsDragging] = useState(false)
 
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    handle: "start" | "end"
+  ) => {
+    setIsDragging(true)
+    // remove the ghost image
+    let newImg = new Image(0, 0)
+    newImg.src =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    e.dataTransfer.setDragImage(newImg, 0, 0)
+
+    setDraggingProject({ projId: project._id, handle })
+  }
+  const handleDragEnd = () => {
+    setIsDragging(false)
+  }
   return (
     <StyledRoadmapProject
       projLength={projLength}
-      order={props.project.order}
+      _id={project._id}
+      order={project.order}
       daysFromRangeStart={daysFromRangeStart}
+      isDragging={isDragging}
     >
-      <div className='project-handle project-handle--start-date'></div>
-      <button>{props.project.icon}</button>
-      <span className='text'>{props.project.title}</span>
-      <div className='project-handle project-handle--end-date'></div>
+      <div
+        draggable='true'
+        className='project-handle project-handle--start-date'
+        onDragStart={e => {
+          handleDragStart(e, "start")
+        }}
+        onDragEnd={handleDragEnd}
+      ></div>
+      <button>{project.icon}</button>
+      <span className='text'>{project.title}</span>
+      <div
+        draggable='true'
+        className='project-handle project-handle--end-date'
+        onDragStart={e => {
+          handleDragStart(e, "end")
+        }}
+        onDragEnd={handleDragEnd}
+      ></div>
     </StyledRoadmapProject>
   )
 }
 
 const StyledRoadmapProject = styled.div<{
   projLength: number
+  _id: number
   order: number
   daysFromRangeStart: number
+  isDragging: boolean
 }>`
   position: absolute;
+  pointer-events: ${props =>
+    props.isDragging
+      ? "none"
+      : "initial"}; // to allow interface to select dates behind project div
   height: 32px;
-  width: ${props => "calc(" + props.projLength + " * var(--day-width))"};
-  top: ${props => "calc(" + props.order + " * (32px + 1em) )"};
-  left: ${props => "calc(" + props.daysFromRangeStart + "* var(--day-width))"};
+  width: ${props =>
+    "calc(" +
+    props.projLength +
+    " * var(--day-width))"}; // TODO replace with global SC variable
+  top: ${props => props.order * (20 + 32)}px;
+  left: ${props =>
+    "calc(" +
+    props.daysFromRangeStart +
+    "* var(--day-width))"}; // TODO replace with global SC variable
   font-size: var(--font-size-smallPlus);
   color: var(--color-secondary);
   padding: 0px 6px 0px 10px;
@@ -68,12 +117,15 @@ const StyledRoadmapProject = styled.div<{
   }
   .project-handle {
     position: absolute;
+    pointer-events: initial;
     width: 28px;
     top: 0px;
     bottom: 0px;
     cursor: col-resize;
     &::after {
       opacity: 0;
+      user-select: none;
+      pointer-events:none;
       height: 26px;
       content: " ";
       position: absolute;
