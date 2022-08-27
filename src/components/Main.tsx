@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
-import Roadmap from "./Roadmap"
+import Roadmap from "./Roadmap/Roadmap"
+// import Roadmap from "./Roadmap"
 
 import { center } from "../globalStyles"
 
@@ -8,6 +9,7 @@ import IconButton from "./IconButton"
 import { ReactComponent as UpdatesIcon } from "../assets/icons/updates.svg"
 import { ReactComponent as GearIcon } from "../assets/icons/gear.svg"
 import { ReactComponent as PlusIcon } from "../assets/icons/plus.svg"
+import { ReactComponent as RelatedIcon } from "../assets/icons/related.svg"
 import { ReactComponent as SearchPlusIcon } from "../assets/icons/search-plus.svg"
 import { ReactComponent as ViewSettingsIcon } from "../assets/icons/view-settings.svg"
 import { ReactComponent as ViewTimelineIcon } from "../assets/icons/view-timeline.svg"
@@ -15,56 +17,57 @@ import { ReactComponent as ViewListIcon } from "../assets/icons/view-list.svg"
 
 const Main = function () {
   return (
-      <StyledMain>
-        <StyledHeader>
-          <div className='breadcrumbs'>
-            Roadmap <span className='project-status'>Active</span>
+    <StyledMain>
+      <StyledHeader>
+        <div className='breadcrumbs'>
+          Roadmap <span className='project-status'>Active</span>
+        </div>
+        <div className='header-controls'>
+          <IconButton className='updates' icon={<UpdatesIcon />}>
+            Updates
+          </IconButton>
+          <IconButton className='milestones' icon={<GearIcon />}>
+            Edit milestone
+          </IconButton>
+          <IconButton className='add-project' icon={<PlusIcon />}>
+            Add project
+          </IconButton>
+        </div>
+      </StyledHeader>
+      <StyledSubheader>
+        <div className='filter-wrapper'>
+          <div className='filter-tabs'>
+            <button className='tab'>All</button>
+            <button className='tab'>Backlog</button>
+            <button className='tab active'>Active</button>
+            <button className='tab'>Closed</button>
           </div>
-          <div className='header-controls'>
-            <IconButton className='updates' icon={<UpdatesIcon />}>
-              Updates
-            </IconButton>
-            <IconButton className='milestones' icon={<GearIcon />}>
-              Edit milestone
-            </IconButton>
-            <IconButton className='add-project' icon={<PlusIcon />}>
-              Add project
-            </IconButton>
-          </div>
-        </StyledHeader>
-        <StyledSubheader>
-          <div className='filter-wrapper'>
-            <div className='filter-tabs'>
-              <button className='tab'>All</button>
-              <button className='tab'>Backlog</button>
-              <button className='tab active'>Active</button>
-              <button className='tab'>Closed</button>
-            </div>
-            <button className='filter-deeper'>
-              <PlusIcon />
-              Filter
+          <button className='filter-deeper'>
+            <PlusIcon />
+            Filter
+          </button>
+        </div>
+        <div className='views-wrapper'>
+          <IconButton icon={<SearchPlusIcon />}>Year</IconButton>{" "}
+          {/* TODO: add dropdown arrows*/}
+          <div className='views-tabs'>
+            <button className='tab'>
+              <ViewListIcon />
+            </button>
+            <button className='tab active'>
+              <ViewTimelineIcon />
+            </button>
+            <button className='tab'>
+              <RelatedIcon />
             </button>
           </div>
-          <div className='views-wrapper'>
-            <IconButton icon={<SearchPlusIcon />}>Year</IconButton> {/* TODO: add dropdown arrows*/}
-            <div className='views-tabs'>
-              <button className='tab'>
-                <ViewTimelineIcon />
-              </button>
-              <button className='tab active'>
-                <ViewListIcon />
-              </button>
-              <button className='tab'>
-                <ViewListIcon />
-              </button>
-            </div>
-            <IconButton icon={<ViewSettingsIcon />} dropdown>
-              View
-            </IconButton>
-          </div>
-        </StyledSubheader>
-        <Roadmap />
-      </StyledMain>
+          <IconButton icon={<ViewSettingsIcon />} dropdown>
+            View
+          </IconButton>
+        </div>
+      </StyledSubheader>
+      <Roadmap />
+    </StyledMain>
   )
 }
 
@@ -74,6 +77,9 @@ const StyledMain = styled.div`
   --padding-left: 30px;
   --padding-right: 24px;
   user-select: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `
 const StyledHeader = styled.header`
   min-height: 57px;
@@ -83,6 +89,8 @@ const StyledHeader = styled.header`
   align-items: center;
   padding: 0 var(--padding-right) 0 var(--padding-left);
   border-bottom: 1px solid var(--ui-lines);
+  flex-grow: 0;
+  flex-shrink: 0;
   .breadcrumbs {
     color: var(--color-primary);
     user-select: none;
@@ -109,6 +117,7 @@ const StyledSubheader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-grow: 0;
   flex-shrink: 0;
   padding: 10px var(--padding-right) 10px var(--padding-left);
   border-bottom: 1px solid var(--ui-lines);

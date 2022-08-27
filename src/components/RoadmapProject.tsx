@@ -28,7 +28,8 @@ const RoadmapProject = function ({
     handle: "start" | "end"
   ) => {
     setIsDragging(true)
-    // remove the ghost image
+
+    // TODO: fix remove the ghost image on drag
     let newImg = new Image(0, 0)
     newImg.src =
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -125,7 +126,7 @@ const StyledRoadmapProject = styled.div<{
     &::after {
       opacity: 0;
       user-select: none;
-      pointer-events:none;
+      pointer-events: none;
       height: 26px;
       content: " ";
       position: absolute;

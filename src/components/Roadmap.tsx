@@ -1,11 +1,10 @@
 import React, { useLayoutEffect, useRef, useState } from "react"
-import { useProjectsState } from "../contexts/ProjectContext"
 
 import styled from "styled-components"
 
 import dayjs from "dayjs"
 import Day from "./Day"
-import RoadmapProject from "./RoadmapProject"
+import RoadmapProjects from "./RoadmapProjects"
 
 let range = 366
 const today = dayjs(new Date())
@@ -26,8 +25,6 @@ export type DraggingProjectState = {
 }
 
 function Roadmap() {
-  let projects = useProjectsState()
-
   let [draggingProject, setDraggingProject] = useState<DraggingProjectState>(
     {} as DraggingProjectState
   )
@@ -92,19 +89,10 @@ function Roadmap() {
             )
           })}
         </div>
-        <div className='projects-wrapper'>
-          {projects.map((project, i) => {
-            // TODO add refs to each project for later mapping the relations
-            return (
-              <RoadmapProject
-                project={project}
-                key={project._id}
-                earliestDate={earliestDate}
-                setDraggingProject={setDraggingProject}
-              />
-            )
-          })}
-        </div>
+        <RoadmapProjects
+          setDraggingProject={setDraggingProject}
+          earliestDate={earliestDate}
+        />
       </div>
     </StyledRoadmap>
   )
@@ -138,13 +126,6 @@ const StyledRoadmap = styled.div`
         position: absolute;
         top: 55px;
       }
-    }
-    .projects-wrapper {
-      position: absolute;
-      top: 3em;
-      left: 0;
-      right: 0;
-      height: auto;
     }
   }
 `
