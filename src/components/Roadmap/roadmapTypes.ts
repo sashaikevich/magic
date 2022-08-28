@@ -1,0 +1,16 @@
+import dayjs from "dayjs"
+
+export type Month = {
+  year: string
+  month: string
+  numDays: number
+  daysFromStart: number
+  mondays: { date: number; position: number }[]
+}
+
+export type TimelineType = {
+  months: Month[]
+  totalDaysInRange: number
+  firstDateInRange: dayjs.Dayjs
+  lastDateInRange: dayjs.Dayjs
+}

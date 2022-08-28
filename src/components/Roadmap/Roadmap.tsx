@@ -1,17 +1,16 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import generateTimeline from "./utils"
+import createInitialTimeline from "./utils"
+
 import RoadmapProjects from "./RoadmapProjects"
+import { TimelineType } from "./roadmapTypes"
 
 const DAY_WIDTH = 5 // TODO move elsewhere
+const initialTimeline = createInitialTimeline()
 
 const Roadmap = function () {
   // TODO regenerate timeline based with timeline state changes
-  let timeline = generateTimeline()
-
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // console.log(e)
-  }
+  const [timeline, setTimeline] = useState(initialTimeline as TimelineType)
 
   return (
     <StyledRoadmap>
@@ -55,7 +54,7 @@ const Roadmap = function () {
               )
             })}
           </div>
-          <div className='months-wrapper' onMouseMove={onMouseMove}>
+          <div className='months-wrapper'>
             {timeline.months.map((month, i) => {
               return (
                 <div
@@ -66,7 +65,7 @@ const Roadmap = function () {
               )
             })}
           </div>
-          <RoadmapProjects />
+          <RoadmapProjects firstDateInRange={timeline.firstDateInRange} />
         </div>
       </div>
     </StyledRoadmap>

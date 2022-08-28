@@ -1,18 +1,29 @@
 import React from "react"
 import styled from "styled-components"
-import { useProjectsState } from "../../contexts/ProjectContext"
+import dayjs from "dayjs"
 
-const RoadmapProjects = () => {
+import { useProjectsState } from "../../contexts/ProjectContext"
+import RoadmapProject from "./RoadmapProject"
+
+type Props = {
+  firstDateInRange: dayjs.Dayjs
+}
+const RoadmapProjects = ({ firstDateInRange }: Props) => {
   let projects = useProjectsState()
   return (
     <StyledRoadmapProjects>
-     
+      {projects.map(project => {
+        return (
+          <RoadmapProject
+            firstDateInRange={firstDateInRange}
+            project={project}
+          />
+        )
+      })}
     </StyledRoadmapProjects>
   )
 }
 
 const StyledRoadmapProjects = styled.div`
-  background: red;
-  position: absolute;
 `
 export default RoadmapProjects

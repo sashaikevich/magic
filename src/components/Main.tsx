@@ -1,10 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 import Roadmap from "./Roadmap/Roadmap"
-// import Roadmap from "./Roadmap"
 
+// TODO rename as roadmap, and rename roadmap as roadmap timeline or something like that
 import { center } from "../globalStyles"
 
+// TODO rewrite svg files as components
 import IconButton from "./IconButton"
 import { ReactComponent as UpdatesIcon } from "../assets/icons/updates.svg"
 import { ReactComponent as GearIcon } from "../assets/icons/gear.svg"
@@ -17,6 +18,7 @@ import { ReactComponent as ViewListIcon } from "../assets/icons/view-list.svg"
 
 const Main = function () {
   return (
+    // TODO separate headers into own components
     <StyledMain>
       <StyledHeader>
         <div className='breadcrumbs'>

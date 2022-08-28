@@ -1,46 +1,32 @@
 import dayjs from "dayjs"
-import timeline from "./store"
 
-type Month = {
-  month: string
-  year: string
-  numDays: number
-  daysFromStart: number
-  mondays: { date: number; position: number }[]
-}
+import { Month, TimelineType } from "./roadmapTypes"
 
-type TimelineType = {
-  months: Month[]
-  totalDaysInRange: number
-}
+const DEFAULT_MONTHS_RANGE = 20
 
-const generateTimeline = (): TimelineType => {
+const createInitialTimeline = (): TimelineType => {
   let today = dayjs()
 
-  const calcDateFirst = () => {
-    // if state has a first day - return
+  const calcFirstDateInRange = () => {
     return dayjs(
-      new Date(today.year(), today.month() - timeline.defaultRangeMonths / 2, 1)
+      new Date(today.year(), today.month() - DEFAULT_MONTHS_RANGE / 2, 1)
     )
   }
 
-  const calcDateLast = () => {
-    // if state has a last day - return
+  const calcLastDateInRange = () => {
     return dayjs(
-      // returns the last day of the previous month (0)
-      new Date(today.year(), today.month() + timeline.defaultRangeMonths / 2, 0)
+      new Date(today.year(), today.month() + DEFAULT_MONTHS_RANGE / 2, 0) // returns the last day of the previous month (0)
     )
   }
 
-  const dateFirst = calcDateFirst()
-  const dateLast = calcDateLast()
+  const firstDateInRange = calcFirstDateInRange()
+  const lastDateInRange = calcLastDateInRange()
 
-  let date = dateFirst // always first of month
-  // populate array of months with all months in the range
-  let months: Month[] = []
+  let date = firstDateInRange // always first of month
+  let months: Month[] = [] // populate array of months with all months in the range
   let daysFromStart = 0
 
-  while (dateLast.diff(date, "day") >= 0) {
+  while (lastDateInRange.diff(date, "day") >= 0) {
     let dayIterator = 0
     let mondays: { date: number; position: number }[] = []
     while (dayIterator <= date.daysInMonth()) {
@@ -56,8 +42,8 @@ const generateTimeline = (): TimelineType => {
     }
 
     months.push({
-      month: date.format("MMMM"),
       year: date.format("YYYY"),
+      month: date.format("MMMM"),
       numDays: date.daysInMonth(),
       daysFromStart: daysFromStart,
       mondays: mondays,
@@ -69,7 +55,24 @@ const generateTimeline = (): TimelineType => {
   return {
     months,
     totalDaysInRange: daysFromStart,
+    firstDateInRange: firstDateInRange,
+    lastDateInRange: lastDateInRange,
   }
 }
 
-export default generateTimeline
+export const calcDurationInDays = (
+  startDate: dayjs.Dayjs | string,
+  endDate: dayjs.Dayjs | string
+) => {
+  startDate = dayjs(startDate)
+  endDate = dayjs(endDate)
+
+  return endDate.diff(startDate, "day")
+}
+
+// export const calcDaysFromStart = (date)=>{
+//   // pull earliest date from timeline's store
+//   diff dayjs(date)
+// }
+
+export default createInitialTimeline
