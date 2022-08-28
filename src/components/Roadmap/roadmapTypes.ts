@@ -8,9 +8,16 @@ export type Month = {
   mondays: { date: number; position: number }[]
 }
 
+export type Today = {
+  today: dayjs.Dayjs
+  date: number
+  daysFromStart: number
+}
+
 export type TimelineType = {
   months: Month[]
-  totalDaysInRange: number
-  firstDateInRange: dayjs.Dayjs
-  lastDateInRange: dayjs.Dayjs
+  totalDaysInTimeline: number
+  firstDateInTimeline: dayjs.Dayjs
+  lastDateInTimeline: dayjs.Dayjs
+  today: Today
 }

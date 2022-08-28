@@ -1,24 +1,37 @@
-import React, { useEffect, useState } from "react"
+import React, { useLayoutEffect, useState, useRef } from "react"
 import styled from "styled-components"
 import createInitialTimeline from "./utils"
 
 import RoadmapProjects from "./RoadmapProjects"
-import { TimelineType } from "./roadmapTypes"
+import { TimelineType, Today } from "./roadmapTypes"
 
 const DAY_WIDTH = 5 // TODO move elsewhere
 const initialTimeline = createInitialTimeline()
 
-const Roadmap = function () {
+const Roadmap = () => {
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+
   // TODO regenerate timeline based with timeline state changes
   const [timeline, setTimeline] = useState(initialTimeline as TimelineType)
 
+  const centerRoadmapOnToday = () => {
+    let initialOffset =
+      timeline.today.daysFromStart * DAY_WIDTH -
+      scrollAreaRef.current!.getBoundingClientRect().width / 2
+    scrollAreaRef.current!.scrollLeft = initialOffset
+  }
+
+  useLayoutEffect(() => {
+    centerRoadmapOnToday()
+  }, [])
+
   return (
     <StyledRoadmap>
-      <div className='scroll-area'>
+      <div className='scroll-area' ref={scrollAreaRef}>
         <div className='timeline-wrapper'>
           <div
             className='timeline-header'
-            style={{ width: timeline.totalDaysInRange * DAY_WIDTH }}
+            style={{ width: timeline.totalDaysInTimeline * DAY_WIDTH }}
           >
             {timeline.months.map((month, i) => {
               return (
@@ -53,19 +66,33 @@ const Roadmap = function () {
                 </div>
               )
             })}
+            <div
+              className='today'
+              style={{
+                left: timeline.today.daysFromStart * DAY_WIDTH,
+              }}
+            >
+              {timeline.today.date}
+            </div>
           </div>
           <div className='months-wrapper'>
             {timeline.months.map((month, i) => {
               return (
                 <div
                   key={i}
-                  className='month-content'
+                  className='month-column'
                   style={{ width: month.numDays * DAY_WIDTH }}
                 ></div>
               )
             })}
+            <div
+              className='today-line'
+              style={{
+                left: timeline.today.daysFromStart * DAY_WIDTH,
+              }}
+            ></div>
           </div>
-          <RoadmapProjects firstDateInRange={timeline.firstDateInRange} />
+          <RoadmapProjects firstDateInTimeline={timeline.firstDateInTimeline} />
         </div>
       </div>
     </StyledRoadmap>
@@ -80,20 +107,24 @@ const StyledRoadmap = styled.div`
   .scroll-area {
     overflow-x: scroll;
     height: 100%;
-    background: rgba(0, 0, 0, 0.004);
+    background: rgb(28, 29, 31);
     font-size: var(--font-size-smallPlus);
     .timeline-wrapper {
       height: 100%;
+      width: fit-content;
       display: flex;
       flex-direction: column;
       position: relative;
       .timeline-header {
         position: relative;
         height: 60px;
+        flex-shrink: 0;
+        background: var(--ui-bg);
         border-bottom: 1px solid var(--ui-lines);
+        line-height: 1;
         .month-year-wrapper {
           position: absolute;
-          top: 0.65em;
+          top: 12px;
           .year {
             color: var(--color-secondary);
             margin-right: 0.5em;
@@ -104,8 +135,23 @@ const StyledRoadmap = styled.div`
         }
         .monday {
           position: absolute;
-          top: 2.25em;
+          top: 34px;
           color: rgb(98, 102, 109);
+        }
+        .today {
+          top: 34px;
+          z-index: 100;
+          position: absolute;
+          color: white;
+          transform: translate(-50%, -5px);
+          width: 24px;
+          height: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: rgb(28 29 31) 0px 0px 8px 3px;
+          background-color: var(--color-blue);
+          border-radius: 99999px;
         }
       }
       .months-wrapper {
@@ -115,11 +161,19 @@ const StyledRoadmap = styled.div`
         height: 100%;
         position: relative;
 
-        .month-content {
+        .month-column {
           flex-shrink: 0;
           display: block;
           width: 40px;
           border-left: 1px dashed var(--ui-lines);
+        }
+        .today-line {
+          position: absolute;
+          width: 2px;
+          top: 0;
+          bottom: 0;
+          background-color: var(--color-blue);
+          transform: translateX(-50%);
         }
       }
     }

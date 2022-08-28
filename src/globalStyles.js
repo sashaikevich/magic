@@ -1,7 +1,7 @@
 import { createGlobalStyle, css } from "styled-components"
 
 export const themes = {
-  colors: { dark: { main: "rgb(247, 248, 248)", bg: "#1F2023" } },
+  colors: { dark: { main: "rgb(247, 248, 248)", bg: "var(--ui-bg)" } },
   breakpoints: {
     mobile: "768px",
   },
@@ -23,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
   :root {
     --color-blue: rgb(94, 106, 210);
     --ui-lines: rgb(48, 50, 54);
+    --ui-bg: rgb(31, 32, 35);
     --color-bg-hover: rgb(45, 47, 54);
     --color-primary:rgb(247, 248, 248);
     --color-secondary: rgb(215, 216, 219);

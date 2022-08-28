@@ -6,16 +6,17 @@ import { useProjectsState } from "../../contexts/ProjectContext"
 import RoadmapProject from "./RoadmapProject"
 
 type Props = {
-  firstDateInRange: dayjs.Dayjs
+  firstDateInTimeline: dayjs.Dayjs
 }
-const RoadmapProjects = ({ firstDateInRange }: Props) => {
+const RoadmapProjects = ({ firstDateInTimeline }: Props) => {
   let projects = useProjectsState()
   return (
     <StyledRoadmapProjects>
       {projects.map(project => {
         return (
           <RoadmapProject
-            firstDateInRange={firstDateInRange}
+            key={project._id}
+            firstDateInTimeline={firstDateInTimeline}
             project={project}
           />
         )
@@ -25,5 +26,8 @@ const RoadmapProjects = ({ firstDateInRange }: Props) => {
 }
 
 const StyledRoadmapProjects = styled.div`
+  position: absolute;
+  inset: 0;
+  top: 60px;
 `
 export default RoadmapProjects

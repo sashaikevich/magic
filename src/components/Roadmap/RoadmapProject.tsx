@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
+
 import { useProjectsState } from "../../contexts/ProjectContext"
 import { center } from "../../globalStyles"
 import { calcDurationInDays } from "./utils"
@@ -9,42 +10,55 @@ import { Project } from "../../data/projects"
 const DAY_WIDTH = 5 // TODO move elsewhere
 
 type Props = {
-  firstDateInRange: dayjs.Dayjs
+  firstDateInTimeline: dayjs.Dayjs
   project: Project
 }
 
-const RoadmapProject = ({ firstDateInRange, project }: Props) => {
+const RoadmapProject = ({ firstDateInTimeline, project }: Props) => {
+  const [isDragging, setIsDragging] = useState(false)
+
   return (
-    <StyledRoadmapProject
-      projLength={calcDurationInDays(project.startDate, project.endDate)}
-      daysFromRangeStart={calcDurationInDays(firstDateInRange,project.startDate
+    <>
+      {isDragging ? (
+        <div>dragging</div>
+      ) : (
+        <StyledRoadmapProject
+          projLength={calcDurationInDays(project.startDate, project.endDate)}
+          daysFromRangeStart={calcDurationInDays(
+            firstDateInTimeline,
+            project.startDate
+          )}
+          _id={project._id}
+          order={project.order}
+          isDragging={isDragging}
+        >
+          <div
+            draggable='true'
+            className='project-handle project-handle--start-date'
+            onMouseDown={e => {
+              setIsDragging(true)
+            }}
+            onMouseUp={e => {
+              setIsDragging(false)
+            }}
+            // onDragStart={e => {
+            //   handleDragStart(e, "start")
+            // }}
+            // onDragEnd={handleDragEnd}
+          ></div>
+          <button>{project.icon}</button>
+          <span className='text'>{project.title}</span>
+          <div
+            draggable='true'
+            className='project-handle project-handle--end-date'
+            // onDragStart={e => {
+            //   handleDragStart(e, "end")
+            // }}
+            // onDragEnd={handleDragEnd}
+          ></div>
+        </StyledRoadmapProject>
       )}
-      _id={project._id}
-      order={project.order}
-      isDragging={false}
-    >
-      <div
-        draggable='true'
-        className='project-handle project-handle--start-date'
-        // onDragStart={e => {
-        //   handleDragStart(e, "start")
-        // }}
-        // onDragEnd={handleDragEnd}
-      ></div>
-      <button>{project.icon}</button>
-      <span className='text'>
-        {project.title}
-        {calcDurationInDays(project.endDate, project.startDate)}
-      </span>
-      <div
-        draggable='true'
-        className='project-handle project-handle--end-date'
-        // onDragStart={e => {
-        //   handleDragStart(e, "end")
-        // }}
-        // onDragEnd={handleDragEnd}
-      ></div>
-    </StyledRoadmapProject>
+    </>
   )
 }
 
@@ -62,7 +76,7 @@ const StyledRoadmapProject = styled.div<{
       : "initial"}; // to allow interface to select dates behind project div
   height: 32px;
   width: ${props => props.projLength * DAY_WIDTH}px;
-  top: ${props => props.order * (20 + 32)}px;
+  top: ${props => 8 + (props.order - 1) * (32 + 10)}px;
   left: ${props => props.daysFromRangeStart * DAY_WIDTH}px;
   /* left: ${props => props.projLength * DAY_WIDTH}px; */
   font-size: var(--font-size-smallPlus);
