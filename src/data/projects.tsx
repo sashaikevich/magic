@@ -67,4 +67,13 @@ export const projects: Project[] = [
     order: 6,
     icon: <PirateIcon />,
   },
+  // {
+  //   _id: 7,
+  //   title: "something",
+  //   projLead: "Gnome",
+  //   startDate: "2021-10-4",
+  //   endDate: "2022-10-24",
+  //   order: 7,
+  //   icon: <PirateIcon />,
+  // },
 ]

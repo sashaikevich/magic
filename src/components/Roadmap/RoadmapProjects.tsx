@@ -3,21 +3,29 @@ import styled from "styled-components"
 import dayjs from "dayjs"
 
 import { useProjectsState } from "../../contexts/ProjectContext"
-import RoadmapProject from "./RoadmapProject"
+import DraggableProject from "./DraggableProject"
 
 type Props = {
   firstDateInTimeline: dayjs.Dayjs
+  timelineWrapperRef: React.RefObject<HTMLDivElement>
+  clientX: React.MutableRefObject<number | null>
 }
-const RoadmapProjects = ({ firstDateInTimeline }: Props) => {
+const RoadmapProjects = ({
+  firstDateInTimeline,
+  timelineWrapperRef,
+  clientX
+}: Props) => {
   let projects = useProjectsState()
   return (
     <StyledRoadmapProjects>
       {projects.map(project => {
         return (
-          <RoadmapProject
+          <DraggableProject
             key={project._id}
             firstDateInTimeline={firstDateInTimeline}
             project={project}
+            timelineWrapperRef={timelineWrapperRef}
+            clientX={clientX}
           />
         )
       })}
