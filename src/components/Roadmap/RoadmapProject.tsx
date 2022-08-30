@@ -2,9 +2,9 @@ import dayjs from "dayjs"
 import React, { useRef, useState, useCallback } from "react"
 import styled from "styled-components"
 
-import { useProjectsState } from "../../contexts/ProjectContext"
+import { useProjectsDispatch } from "../../contexts/ProjectContext"
 import { center } from "../../globalStyles"
-import { calcDurationInDays } from "./utils"
+import { calcDurationInDays, calcNewDate, formatDate } from "./utils"
 import { Project } from "../../data/projects"
 
 const DAY_WIDTH = 5 // TODO move elsewhere
@@ -19,26 +19,42 @@ type DraggingRefType = {
   project: {
     initialLeft: number
     initialWidth: number
-    handle: "start" | "end" | "both"
-  } | null
+    movement: number
+    handle: "start" | "end" | "both" | null
+  }
   initialX: number
-  prevX: number
-  TmlnBCRLeft: number | null
+  TmlnBCRLeft: number
 }
+
 const RoadmapProject = ({
   firstDateInTimeline,
   project,
   timelineWrapperRef,
 }: Props) => {
   const [isDragging, setIsDragging] = useState(false)
-
+  const dispatch = useProjectsDispatch()
   const projectRef = useRef<HTMLDivElement | null>(null)
   const draggingRef = useRef<DraggingRefType>({} as DraggingRefType)
+  const dateIndicatorStartRef = useRef<HTMLDivElement | null>(null)
+  const dateIndicatorEndRef = useRef<HTMLDivElement | null>(null)
+
+  const emptyDraggingRef: DraggingRefType = {
+    isDragging: false,
+    project: {
+      initialLeft: 0,
+      initialWidth: 0,
+      movement: 0,
+      handle: null,
+    },
+    initialX: 0,
+    TmlnBCRLeft: 0,
+  }
 
   const handleDragStart = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    handle: "start" | "end"
+    handle: "start" | "end" | "both"
   ) => {
+    e.stopPropagation()
     setIsDragging(true)
     draggingRef.current = {
       isDragging: true,
@@ -49,9 +65,9 @@ const RoadmapProject = ({
         initialWidth:
           calcDurationInDays(project.startDate, project.endDate) * DAY_WIDTH,
         handle,
+        movement: 0,
       },
       initialX: e.clientX,
-      prevX: e.clientX,
       TmlnBCRLeft: timelineWrapperRef.current!.getBoundingClientRect().left,
     }
     document.addEventListener("mousemove", handleDrag)
@@ -59,82 +75,130 @@ const RoadmapProject = ({
     document.body.style.cursor = "col-resize"
   }
 
-  const handleDrag = useCallback((e: MouseEvent) => {
-    if (!draggingRef.current.isDragging) return
-    if (e.clientX === draggingRef.current.prevX) return // don't care about movements on Y
+  const handleDrag = useCallback(
+    (e: MouseEvent) => {
+      if (!draggingRef.current.isDragging) return
+      if (e.clientX === draggingRef.current.initialX) return // ignore Y movement
 
-    let dragDirection = e.clientX < draggingRef.current.prevX ? "left" : "right"
-    draggingRef.current.prevX = e.clientX
-
-    const snapToDayBounds = (distFromStart: number): number => {
-      if (!dragDirection) return distFromStart
-
-      if (dragDirection === "left") {
-        return Math.floor(distFromStart / DAY_WIDTH) * DAY_WIDTH
-      } else {
-        return Math.ceil(distFromStart / DAY_WIDTH) * DAY_WIDTH
+      const snapToDayBounds = (distancePxls: number): number => {
+        return Math.floor(distancePxls / DAY_WIDTH) * DAY_WIDTH
       }
-    }
 
-    let distFromTmlnStart = e.clientX - draggingRef.current.TmlnBCRLeft!
-    distFromTmlnStart = snapToDayBounds(distFromTmlnStart)
+      draggingRef.current.project!.movement = snapToDayBounds(
+        e.clientX - draggingRef.current.initialX
+      )
 
-    if (draggingRef.current.project!.handle === "start") {
-      // let movement =
-      //   draggingRef.current.project!.initialLeft - distFromTmlnStart
-      let movement = snapToDayBounds(draggingRef.current.initialX - e.clientX)
+      if (draggingRef.current.project!.handle === "start") {
+        projectRef.current!.style.left = `${
+          draggingRef.current.project!.initialLeft! +
+          draggingRef.current.project!.movement
+        }px`
+        projectRef.current!.style.width = `${
+          draggingRef.current.project!.initialWidth -
+          draggingRef.current.project!.movement +
+          DAY_WIDTH
+        }px`
+        dateIndicatorStartRef.current!.textContent = formatDate(
+          calcNewDate(
+            project.startDate,
+            draggingRef.current.project!.movement / DAY_WIDTH
+          )
+        )
+      } else if (draggingRef.current.project!.handle === "end") {
+        projectRef.current!.style.width = `${
+          draggingRef.current.project!.initialWidth +
+          draggingRef.current.project!.movement
+        }px`
+        dateIndicatorEndRef.current!.textContent = formatDate(
+          calcNewDate(
+            project.endDate,
+            draggingRef.current.project!.movement / DAY_WIDTH - 1
+          )
+        )
+      } else if (draggingRef.current.project!.handle === "both") {
+        projectRef.current!.style.left = `${
+          draggingRef.current.project!.initialLeft! +
+          draggingRef.current.project!.movement
+        }px`
+        dateIndicatorStartRef.current!.textContent = formatDate(
+          calcNewDate(
+            project.startDate,
+            draggingRef.current.project!.movement / DAY_WIDTH
+          )
+        )
+        dateIndicatorEndRef.current!.textContent = formatDate(
+          calcNewDate(
+            project.endDate,
+            draggingRef.current.project!.movement / DAY_WIDTH // the offset for the last day is already accounted for, so no need to subtract 1
+          )
+        )
+      }
+    },
+    [project]
+  )
 
-      projectRef.current!.style.left = `${distFromTmlnStart}px`
-      projectRef.current!.style.width = `${
-        draggingRef.current.project!.initialWidth + movement
-      }px`
-      console.log(movement)
-      console.log(draggingRef.current.initialX)
-    } else if (draggingRef.current.project!.handle === "end") {
-      let movement =
-        draggingRef.current.project!.initialLeft +
-        draggingRef.current.project!.initialWidth -
-        distFromTmlnStart
-      projectRef.current!.style.width = `${
-        draggingRef.current.project!.initialWidth - movement
-      }px`
-    }
+  const handleDragEnd = useCallback(
+    (e: MouseEvent) => {
+      // trigger rerender, removing the interactive date markers
+      setIsDragging(false)
 
-    // if (dragDirection === "left") {
-    //   if (draggingRef.current.project!.handle === "start") {
-    //     // let newDate = firstDateInTimeline
-    //     //   .add(distFromTmlnStart / DAY_WIDTH, "day")
-    //     //   .format("ddd, MMM D")
-    //     // console.log(newDate)
+      // remove visual changes to project
+      projectRef.current!.style.left = ""
+      projectRef.current!.style.width = ""
 
-    //   }
-    //   // if moving end handle
-    //   else if (draggingRef.current.project!.handle === "end") {
-    //     projectRef.current!.style.width = `${
-    //       draggingRef.current.project!.initialWidth + movement
-    //     }px`
-    //   }
-    //   // if moving entire project
-    // } else if (dragDirection === "right") {
-    //   if (draggingRef.current.project!.handle === "start") {
-    //     projectRef.current!.style.left = `${distFromTmlnStart}px`
-    //     projectRef.current!.style.width = `${
-    //       draggingRef.current.project!.initialWidth - movement
-    //     }px`
-    //   }
-    // }
-  }, [])
+      // dispatch update to projects state
+      if (draggingRef.current.project!.handle === "start") {
+        dispatch({
+          type: "CHANGE_PROJECT_START_DATE",
+          payload: {
+            projID: project._id,
+            targetDate: calcNewDate(
+              project.startDate,
+              draggingRef.current.project!.movement / DAY_WIDTH
+            ),
+          },
+        })
+      } else if (draggingRef.current.project!.handle === "end") {
+        dispatch({
+          type: "CHANGE_PROJECT_END_DATE",
+          payload: {
+            projID: project._id,
+            targetDate: calcNewDate(
+              project.endDate,
+              draggingRef.current.project!.movement / DAY_WIDTH - 1
+            ),
+          },
+        })
+      } else if (draggingRef.current.project!.handle === "both") {
+        dispatch({
+          type: "CHANGE_PROJECT_START_DATE",
+          payload: {
+            projID: project._id,
+            targetDate: calcNewDate(
+              project.startDate,
+              draggingRef.current.project!.movement / DAY_WIDTH
+            ),
+          },
+        })
+        dispatch({
+          type: "CHANGE_PROJECT_END_DATE",
+          payload: {
+            projID: project._id,
+            targetDate: calcNewDate(
+              project.endDate,
+              draggingRef.current.project!.movement / DAY_WIDTH 
+            ),
+          },
+        })
+      }
 
-  const handleDragEnd = useCallback((e: MouseEvent) => {
-    //update state
-    setIsDragging(false)
-    draggingRef.current.isDragging = false
-    draggingRef.current.initialX = 0
-    draggingRef.current.prevX = 0
-    document.body.style.cursor = "initial"
-    document.removeEventListener("mousemove", handleDrag)
-    document.removeEventListener("mouseup", handleDragEnd)
-  }, [])
+      draggingRef.current = emptyDraggingRef
+      document.body.style.cursor = "initial"
+      document.removeEventListener("mousemove", handleDrag)
+      document.removeEventListener("mouseup", handleDragEnd)
+    },
+    [project]
+  )
 
   return (
     <StyledRoadmapProject
@@ -146,10 +210,15 @@ const RoadmapProject = ({
       )}
       _id={project._id}
       order={project.order}
-      isDragging={isDragging}
+      onMouseDown={e => {
+        handleDragStart(e, "both")
+      }}
     >
-      {isDragging && draggingRef.current.project!.handle === "start" && (
-        <div className='date-indicator date-indicator--start'>date</div>
+      {isDragging && draggingRef.current.project!.handle !== "end" && (
+        <div
+          ref={dateIndicatorStartRef}
+          className='date-indicator date-indicator--start'
+        ></div>
       )}
       <div
         className='project-handle project-handle--start-date'
@@ -165,8 +234,11 @@ const RoadmapProject = ({
           handleDragStart(e, "end")
         }}
       ></div>
-      {isDragging && draggingRef.current.project!.handle === "end" && (
-        <div className='date-indicator date-indicator--end'>date</div>
+      {isDragging && draggingRef.current.project!.handle !== "start" && (
+        <div
+          ref={dateIndicatorEndRef}
+          className='date-indicator date-indicator--end'
+        ></div>
       )}
     </StyledRoadmapProject>
   )
@@ -177,13 +249,12 @@ const StyledRoadmapProject = styled.div<{
   _id: number
   order: number
   daysFromRangeStart: number
-  isDragging: boolean
 }>`
   position: absolute;
   height: 32px;
   top: ${props => 8 + (props.order - 1) * (32 + 10)}px;
   left: ${props => props.daysFromRangeStart * DAY_WIDTH}px;
-  width: ${props => props.projDuration * DAY_WIDTH}px;
+  width: ${props => props.projDuration * DAY_WIDTH + DAY_WIDTH}px;
   font-size: var(--font-size-smallPlus);
   color: var(--color-secondary);
   padding: 0px 6px 0px 10px;
@@ -211,6 +282,9 @@ const StyledRoadmapProject = styled.div<{
     margin-bottom: 11px;
     border-radius: 4px;
     padding: 5px;
+    z-index: 1000;
+    box-shadow: rgb(0 0 0 / 10%) 0px 2px 4px;
+    white-space: nowrap;
     &--start {
       left: 0;
     }
@@ -270,7 +344,6 @@ const StyledRoadmapProject = styled.div<{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: ${props => (props.isDragging ? "red" : "inherit")};
   }
 `
 export default RoadmapProject

@@ -58,10 +58,10 @@ const createInitialTimeline = (): TimelineType => {
     firstDateInTimeline: firstDateInTimeline,
     lastDateInTimeline: lastDateInTimeline,
     today: {
-      today:today,
+      today: today,
       date: today.date(),
-      daysFromStart: today.diff(firstDateInTimeline, "day")
-    }
+      daysFromStart: today.diff(firstDateInTimeline, "day"),
+    },
   }
 }
 
@@ -73,6 +73,19 @@ export const calcDurationInDays = (
   endDate = dayjs(endDate)
 
   return endDate.diff(startDate, "day")
+}
+
+export const calcNewDate = (
+  originalDate: dayjs.Dayjs | string,
+  movementInDays: number
+) => {
+  originalDate = dayjs(originalDate)
+  return originalDate.add(movementInDays, "day")
+}
+
+export const formatDate = (date: dayjs.Dayjs): string => {
+  // return date.format("YYYY-MM-DD")
+  return date.format("ddd, MMM D")
 }
 
 export default createInitialTimeline

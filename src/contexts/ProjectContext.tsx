@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 import React, {
   createContext,
   SetStateAction,
@@ -9,7 +11,7 @@ import { Project } from "../data/projects"
 
 type ProjectActions = {
   type: "CHANGE_PROJECT_START_DATE" | "CHANGE_PROJECT_END_DATE"
-  payload: { projID: number; targetDate: string }
+  payload: { projID: number; targetDate: string | dayjs.Dayjs }
 }
 
 // type DispatchType = React.Dispatch<React.SetStateAction<typeof initialProjects>>
@@ -23,7 +25,7 @@ const reducer = (state: Project[], action: ProjectActions): Project[] => {
         if (proj._id !== action.payload.projID) return proj
         return { ...proj, startDate: action.payload.targetDate }
       })
-      case "CHANGE_PROJECT_END_DATE":
+    case "CHANGE_PROJECT_END_DATE":
       return [...state].map(proj => {
         if (proj._id !== action.payload.projID) return proj
         return { ...proj, endDate: action.payload.targetDate }

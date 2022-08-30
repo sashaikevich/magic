@@ -1,6 +1,8 @@
-import * as dayjs from "dayjs"
+import dayjs from "dayjs"
 // TODO add real _id
+
 import { ReactComponent as PirateIcon } from "../assets/icons/pirate.svg"
+const today = dayjs(new Date())
 
 export type Project = {
   _id: number
@@ -16,8 +18,8 @@ export const projects: Project[] = [
   {
     _id: 1,
     title: "Collect underpants",
-    startDate: "2022-06-20",
-    endDate: "2022-07-29",
+    startDate: today.subtract(72, "day").format("YYYY-MM-DD"),
+    endDate: today.subtract(30, "day").format("YYYY-MM-DD"),
     projLead: "Gnome",
     order: 1,
     icon: <PirateIcon />,
@@ -25,8 +27,8 @@ export const projects: Project[] = [
   {
     _id: 2,
     title: "???",
-    startDate: "2022-07-21",
-    endDate: "2022-08-15",
+    startDate: today.subtract(40, "day").format("YYYY-MM-DD"),
+    endDate: today.subtract(15, "day"),
     projLead: "Gnome",
     order: 2,
     icon: <PirateIcon />,
@@ -35,8 +37,8 @@ export const projects: Project[] = [
     _id: 3,
     title: "Profit",
     projLead: "Gnome",
-    startDate: "2022-08-8",
-    endDate: "2022-09-17",
+    startDate: today.subtract(20, "day").format("YYYY-MM-DD"),
+    endDate: today.add(18, "day"),
     order: 3,
     icon: <PirateIcon />,
   },
@@ -44,7 +46,7 @@ export const projects: Project[] = [
     _id: 4,
     title: "something",
     projLead: "Gnome",
-    startDate: "2022-07-3",
+    startDate: today.subtract(60, "day").format("YYYY-MM-DD"),
     endDate: "2022-08-2",
     order: 4,
     icon: <PirateIcon />,
@@ -53,8 +55,8 @@ export const projects: Project[] = [
     _id: 5,
     title: "something",
     projLead: "Gnome",
-    startDate: "2022-07-22",
-    endDate: "2022-08-28",
+    startDate: "2022-08-01",
+    endDate: "2022-08-31",
     order: 5,
     icon: <PirateIcon />,
   },
