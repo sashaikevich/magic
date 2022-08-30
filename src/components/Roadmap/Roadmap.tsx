@@ -11,7 +11,6 @@ const initialTimeline = createInitialTimeline()
 const Roadmap = () => {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const timelineWrapperRef = useRef<HTMLDivElement | null>(null)
-  const clientX = useRef<number | null>(null)
 
   // TODO regenerate timeline based with timeline state changes
   const [timeline, setTimeline] = useState(initialTimeline as TimelineType)
@@ -27,19 +26,10 @@ const Roadmap = () => {
     centerRoadmapOnToday()
   }, [])
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    clientX.current = e.clientX
-    console.log(clientX.current)
-  }
-
   return (
     <StyledRoadmap>
       <div className='scroll-area' ref={scrollAreaRef}>
-        <div
-          className='timeline-wrapper'
-          ref={timelineWrapperRef}
-          onMouseMove={handleMouseMove}
-        >
+        <div className='timeline-wrapper' ref={timelineWrapperRef}>
           <div
             className='timeline-header'
             style={{ width: timeline.totalDaysInTimeline * DAY_WIDTH }}
@@ -106,7 +96,6 @@ const Roadmap = () => {
           <RoadmapProjects
             firstDateInTimeline={timeline.firstDateInTimeline}
             timelineWrapperRef={timelineWrapperRef}
-            clientX={clientX}
           />
         </div>
       </div>
