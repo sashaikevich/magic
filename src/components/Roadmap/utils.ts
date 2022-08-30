@@ -83,9 +83,10 @@ export const calcNewDate = (
   return originalDate.add(movementInDays, "day")
 }
 
-export const formatDate = (date: dayjs.Dayjs): string => {
+export const formatDate = (date: string | dayjs.Dayjs): string => {
+  let normalized = dayjs(date);
   // return date.format("YYYY-MM-DD")
-  return date.format("ddd, MMM D")
+  return normalized.format("ddd, MMM D")
 }
 
 export default createInitialTimeline

@@ -218,7 +218,7 @@ const RoadmapProject = ({
         <div
           ref={dateIndicatorStartRef}
           className='date-indicator date-indicator--start'
-        ></div>
+        >{formatDate(project.startDate)}</div>
       )}
       <div
         className='project-handle project-handle--start-date'
@@ -238,7 +238,7 @@ const RoadmapProject = ({
         <div
           ref={dateIndicatorEndRef}
           className='date-indicator date-indicator--end'
-        ></div>
+        >{formatDate(project.endDate)}</div>
       )}
     </StyledRoadmapProject>
   )
