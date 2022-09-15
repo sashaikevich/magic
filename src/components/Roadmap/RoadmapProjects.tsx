@@ -4,6 +4,7 @@ import dayjs from "dayjs"
 
 import { useProjectsState } from "../../contexts/ProjectContext"
 import RoadmapProject from "./RoadmapProject"
+import RelationshipNode from "./RelationshipNode"
 
 type Props = {
   firstDateInTimeline: dayjs.Dayjs
@@ -18,12 +19,14 @@ const RoadmapProjects = ({
     <StyledRoadmapProjects>
       {projects.map(project => {
         return (
-          <RoadmapProject
-            key={project._id}
-            firstDateInTimeline={firstDateInTimeline}
-            project={project}
-            timelineWrapperRef={timelineWrapperRef}
-          />
+          <RelationshipNode>
+            <RoadmapProject
+              key={project._id}
+              firstDateInTimeline={firstDateInTimeline}
+              project={project}
+              timelineWrapperRef={timelineWrapperRef}
+            />
+          </RelationshipNode>
         )
       })}
     </StyledRoadmapProjects>

@@ -9,6 +9,8 @@ import { Project } from "../../data/projects"
 
 const DAY_WIDTH = 5 // TODO move elsewhere
 
+// TODO: replace mouse events with device agnostic pointer events onPointerUp/Down/Move
+
 type Props = {
   firstDateInTimeline: dayjs.Dayjs
   project: Project
